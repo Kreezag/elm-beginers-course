@@ -4,30 +4,22 @@ import Bool.Extra exposing (..)
 import Html exposing (..)
 
 
-add a b =
-    a ++ b
+calcNameLength text =
+    String.length (String.trim text)
 
 
-addNum a b =
-    a + b
+textMoreThanTenLength text =
+    calcNameLength text > 10
 
 
-testResult =
-    addNum 2 2 |> (\a -> remainderBy 2 a == 0)
+updateName text =
+    ifElse (String.toUpper text) text (textMoreThanTenLength text)
 
 
-result =
-    add "Hello " "world!"
-
-
-counter =
-    0
-
-
-increment cmt amt =
-    cmt + amt
+result text =
+    updateName text ++ " - name length: " ++ String.fromInt (calcNameLength text)
 
 
 main : Html msg
 main =
-    text (Bool.Extra.toString testResult)
+    text (result "John doeeeeee")
