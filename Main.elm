@@ -1,5 +1,6 @@
 module Main exposing (main)
 
+import Bool.Extra exposing (..)
 import Html exposing (..)
 
 
@@ -12,7 +13,7 @@ addNum a b =
 
 
 testResult =
-    addNum 1 2 |> addNum 3
+    addNum 2 2 |> (\a -> remainderBy 2 a == 0)
 
 
 result =
@@ -21,4 +22,4 @@ result =
 
 main : Html msg
 main =
-    text (String.fromInt testResult)
+    text (Bool.Extra.toString testResult)
