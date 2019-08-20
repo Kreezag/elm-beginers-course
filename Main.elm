@@ -20,6 +20,14 @@ result =
     add "Hello " "world!"
 
 
+counter =
+    0
+
+
+increment cmt amt =
+    cmt + amt
+
+
 main : Html msg
 main =
     text (Bool.Extra.toString testResult)
