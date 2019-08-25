@@ -2,8 +2,6 @@ module Main exposing (main)
 
 import Bool.Extra exposing (..)
 import Html exposing (..)
-import Json.Decode exposing (..)
-import Json.Encode exposing (..)
 
 
 type alias Card =
