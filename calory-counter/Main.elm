@@ -9,13 +9,12 @@ import Html.Events exposing (..)
 type alias Model =
     { calories : Int
     , input : Int
-    , error : Maybe String
     }
 
 
 initialModel : Model
 initialModel =
-    Model 0 0 Nothing
+    Model 0 0
 
 
 type Msg
@@ -33,20 +32,11 @@ update msg model =
                 , input = 0
             }
 
-        Input value ->
-            case String.toInt value of
-                Ok Result ->
-                    { model | input = Result, error = Nothing }
-
-                Err err ->
-                    { model | input = 0, error = Just err }
+        Input val ->
+            { model | input = Maybe.withDefault 0 (String.toInt val) }
 
         Clear ->
             initialModel
-
-
-
--- viewForm : Form
 
 
 view : Model -> Html Msg
@@ -54,7 +44,8 @@ view model =
     div []
         [ h3 []
             [ text ("Total Calories: " ++ Debug.toString model.calories) ]
-        , span [] [ text (Debug.toString model) ]
+
+        -- , span [] [ text (Debug.toString model) ]
         , div []
             [ input
                 [ type_ "text"
@@ -68,17 +59,16 @@ view model =
                     )
                 ]
                 []
-
-            -- , button
-            --     [ type_ "submit"
-            --     , onClick AddCalorie
-            --     ]
-            --     [ text "Add" ]
-            -- , button
-            --     [ type_ "button"
-            --     , onClick Clear
-            --     ]
-            --     [ text "Clear" ]
+            , button
+                [ type_ "submit"
+                , onClick AddCalorie
+                ]
+                [ text "Add" ]
+            , button
+                [ type_ "button"
+                , onClick Clear
+                ]
+                [ text "Clear" ]
             ]
         ]
 
