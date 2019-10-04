@@ -1,0 +1,24 @@
+{
+  "name": "scorekeeper-app",
+  "version": "1.0.0",
+  "description": "test-elm-app",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "elm"
+  ],
+  "author": "Kreezag",
+  "license": "ISC",
+  "devDependencies": {
+    "clear": "^0.1.0",
+    "gulp": "^4.0.2",
+    "gulp-util": "^3.0.8",
+    "st": "^1.2.2"
+  },
+  "dependencies": {
+    "gulp-connect": "^5.7.0",
+    "gulp-livereload": "^4.0.2"
+  }
+}
