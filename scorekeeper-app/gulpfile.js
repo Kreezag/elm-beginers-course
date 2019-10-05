@@ -8,23 +8,23 @@ var gulp = require('gulp'),
   livereload = require('gulp-livereload'),
   counter = 0;
 
-var cmd = 'elm make ./Main.elm --output ./main.js';
 clear();
 
-gulp.task('server', function(done) {
+const runServer = function(cb) {
   gutil.log(gutil.colors.blue('Starting server at http://localhost:4000'));
   connect.server({
     port: 4000,
     livereload: true
   });
-});
 
-gulp.task('elm', function(cb) {
-  console.log('E_L_M');
+  cb();
+};
+
+const elmMake = function(cb) {
   if (counter > 0){
     clear();
   }
-  exec(cmd, function(err, stdout, stderr) {
+  exec('elm make ./Main.elm --output ./build/main.js', function(err, stdout, stderr) {
     if (err){
       gutil.log(gutil.colors.red('elm make: '),gutil.colors.red(stderr));
     } else {
@@ -33,21 +33,27 @@ gulp.task('elm', function(cb) {
     cb();
   });
   counter++;
-});
+};
 
-gulp.task('reload', function(cb) {
+const reloadServer = function(cb) {
   livereload.listen({
     start: true,
     reloadPage: './*.html'
   })
   cb();
-})
+};
+
+gulp.task('reload', reloadServer)
+
+gulp.task('elm', elmMake)
+
+gulp.task('server', runServer);
 
 gulp.task('watch', function(cb) {
   gulp.watch('./*.elm', gulp.series('elm'))
-  gulp.watch('./*.html', gulp.series('reload')) 
+  gulp.watch('./*.html', gulp.series('reload'))
   
   cb();
 });
 
-gulp.task('default', gulp.series('watch', 'server' ));
+gulp.task('start', gulp.series('watch', 'server' ));

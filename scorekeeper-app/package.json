@@ -2,8 +2,9 @@
   "name": "scorekeeper-app",
   "version": "1.0.0",
   "description": "test-elm-app",
-  "main": "main.js",
+  "main": "./index.html",
   "scripts": {
+    "start": "gulp start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
