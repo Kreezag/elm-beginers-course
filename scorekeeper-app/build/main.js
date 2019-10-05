@@ -4392,6 +4392,159 @@ var elm$core$Set$toList = function (_n0) {
 	return elm$core$Dict$keys(dict);
 };
 var author$project$Main$initModel = {name: '', playerId: elm$core$Maybe$Nothing, players: _List_Nil, plays: _List_Nil};
+var author$project$Main$Player = F3(
+	function (id, name, points) {
+		return {id: id, name: name, points: points};
+	});
+var elm$core$Basics$add = _Basics_add;
+var elm$core$List$foldl = F3(
+	function (func, acc, list) {
+		foldl:
+		while (true) {
+			if (!list.b) {
+				return acc;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				var $temp$func = func,
+					$temp$acc = A2(func, x, acc),
+					$temp$list = xs;
+				func = $temp$func;
+				acc = $temp$acc;
+				list = $temp$list;
+				continue foldl;
+			}
+		}
+	});
+var elm$core$List$length = function (xs) {
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (_n0, i) {
+				return i + 1;
+			}),
+		0,
+		xs);
+};
+var author$project$Main$add = function (model) {
+	var player = A3(
+		author$project$Main$Player,
+		elm$core$List$length(model.players),
+		model.name,
+		0);
+	var newPlayers = A2(elm$core$List$cons, player, model.players);
+	return _Utils_update(
+		model,
+		{name: '', players: newPlayers});
+};
+var elm$core$Basics$eq = _Utils_equal;
+var elm$core$Basics$gt = _Utils_gt;
+var elm$core$List$reverse = function (list) {
+	return A3(elm$core$List$foldl, elm$core$List$cons, _List_Nil, list);
+};
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var author$project$Main$edit = F2(
+	function (model, id) {
+		var newPlays = A2(
+			elm$core$List$map,
+			function (play) {
+				return _Utils_eq(play.playerId, id) ? _Utils_update(
+					play,
+					{name: model.name}) : play;
+			},
+			model.plays);
+		var newPlayers = A2(
+			elm$core$List$map,
+			function (player) {
+				return _Utils_eq(player.id, id) ? _Utils_update(
+					player,
+					{name: model.name}) : player;
+			},
+			model.players);
+		return _Utils_update(
+			model,
+			{name: '', playerId: elm$core$Maybe$Nothing, players: newPlayers, plays: newPlays});
+	});
+var author$project$Main$save = function (model) {
+	var _n0 = model.playerId;
+	if (_n0.$ === 'Just') {
+		var id = _n0.a;
+		return A2(author$project$Main$edit, model, id);
+	} else {
+		return author$project$Main$add(model);
+	}
+};
+var elm$core$String$isEmpty = function (string) {
+	return string === '';
+};
 var author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -4401,13 +4554,13 @@ var author$project$Main$update = F2(
 					model,
 					{name: name});
 			case 'Save':
+				return elm$core$String$isEmpty(model.name) ? model : author$project$Main$save(model);
+			case 'Cancel':
 				return _Utils_update(
 					model,
-					{name: 'save'});
+					{name: '', playerId: elm$core$Maybe$Nothing});
 			default:
-				return _Utils_update(
-					model,
-					{name: ''});
+				return model;
 		}
 	});
 var author$project$Main$Cancel = {$: 'Cancel'};
@@ -4450,28 +4603,6 @@ var elm$core$Array$SubTree = function (a) {
 	return {$: 'SubTree', a: a};
 };
 var elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
-var elm$core$List$foldl = F3(
-	function (func, acc, list) {
-		foldl:
-		while (true) {
-			if (!list.b) {
-				return acc;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				var $temp$func = func,
-					$temp$acc = A2(func, x, acc),
-					$temp$list = xs;
-				func = $temp$func;
-				acc = $temp$acc;
-				list = $temp$list;
-				continue foldl;
-			}
-		}
-	});
-var elm$core$List$reverse = function (list) {
-	return A3(elm$core$List$foldl, elm$core$List$cons, _List_Nil, list);
-};
 var elm$core$Array$compressNodes = F2(
 	function (nodes, acc) {
 		compressNodes:
@@ -4498,7 +4629,6 @@ var elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
 	});
-var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Tuple$first = function (_n0) {
 	var x = _n0.a;
 	return x;
@@ -4519,13 +4649,11 @@ var elm$core$Array$treeFromBuilder = F2(
 			}
 		}
 	});
-var elm$core$Basics$add = _Basics_add;
 var elm$core$Basics$apL = F2(
 	function (f, x) {
 		return f(x);
 	});
 var elm$core$Basics$floor = _Basics_floor;
-var elm$core$Basics$gt = _Utils_gt;
 var elm$core$Basics$max = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) > 0) ? x : y;
@@ -4643,16 +4771,6 @@ var elm$core$Char$isDigit = function (_char) {
 };
 var elm$core$Char$isAlphaNum = function (_char) {
 	return elm$core$Char$isLower(_char) || (elm$core$Char$isUpper(_char) || elm$core$Char$isDigit(_char));
-};
-var elm$core$List$length = function (xs) {
-	return A3(
-		elm$core$List$foldl,
-		F2(
-			function (_n0, i) {
-				return i + 1;
-			}),
-		0,
-		xs);
 };
 var elm$core$List$map2 = _List_map2;
 var elm$core$List$rangeHelp = F3(
@@ -4873,61 +4991,6 @@ var elm$html$Html$Events$stopPropagationOn = F2(
 			event,
 			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
 var elm$json$Json$Decode$field = _Json_decodeField;
 var elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
@@ -4993,8 +5056,7 @@ var author$project$Main$playerForm = function (model) {
 				elm$html$Html$button,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$type_('submit'),
-						elm$html$Html$Events$onClick(author$project$Main$Save)
+						elm$html$Html$Attributes$type_('submit')
 					]),
 				_List_fromArray(
 					[
@@ -5072,20 +5134,6 @@ var elm$core$Task$Perform = function (a) {
 };
 var elm$core$Task$succeed = _Scheduler_succeed;
 var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
 var elm$core$Task$andThen = _Scheduler_andThen;
 var elm$core$Task$map = F2(
 	function (func, taskA) {
@@ -5174,9 +5222,6 @@ var elm$core$String$startsWith = _String_startsWith;
 var elm$url$Url$Http = {$: 'Http'};
 var elm$url$Url$Https = {$: 'Https'};
 var elm$core$String$indexes = _String_indexes;
-var elm$core$String$isEmpty = function (string) {
-	return string === '';
-};
 var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
