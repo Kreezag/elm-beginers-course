@@ -5075,10 +5075,54 @@ var author$project$Main$playerForm = function (model) {
 					]))
 			]));
 };
-var elm$core$Debug$toString = _Debug_toString;
 var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$h1 = _VirtualDom_node('h1');
+var elm$html$Html$h4 = _VirtualDom_node('h4');
+var elm$html$Html$li = _VirtualDom_node('li');
 var elm$html$Html$span = _VirtualDom_node('span');
+var elm$html$Html$ul = _VirtualDom_node('ul');
+var author$project$Main$players = function (model) {
+	return A2(
+		elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$h4,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('Name')
+							])),
+						A2(
+						elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('Points')
+							]))
+					])),
+				A2(
+				elm$html$Html$ul,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$li,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('peope')
+							]))
+					]))
+			]));
+};
+var elm$core$Debug$toString = _Debug_toString;
+var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var author$project$Main$view = function (model) {
 	return A2(
@@ -5096,6 +5140,7 @@ var author$project$Main$view = function (model) {
 					[
 						elm$html$Html$text('Score keeper')
 					])),
+				author$project$Main$players(model),
 				author$project$Main$playerForm(model),
 				A2(
 				elm$html$Html$span,

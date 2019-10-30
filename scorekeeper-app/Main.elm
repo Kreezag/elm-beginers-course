@@ -127,13 +127,17 @@ add model =
     { model | players = newPlayers, name = "" }
 
 
-view : Model -> Html Msg
-view model =
-    div [ class "scoreboard" ]
-        [ h1 [] [ text "Score keeper" ]
-        , playerForm model
-        , span [] [ text (Debug.toString model) ]
-        ]
+
+--     input
+--     [ type_ "text"
+--     , placeholder "add"
+--     , onInput Input
+--     , value model.name
+--     ]
+--     []
+-- , button [ type_ "submit" ] [ text "Save" ]
+-- , button [ type_ "button", onClick Cancel ] [ text "Cancel" ]
+-- ]
 
 
 playerForm : Model -> Html Msg
@@ -148,6 +152,28 @@ playerForm model =
             []
         , button [ type_ "submit" ] [ text "Save" ]
         , button [ type_ "button", onClick Cancel ] [ text "Cancel" ]
+        ]
+
+
+players : Model -> Html Msg
+players model =
+    div []
+        [ h4 []
+            [ span [] [ text "Name" ]
+            , span [] [ text "Points" ]
+            ]
+        , ul []
+            (List.map (\name -> li [] [ text name ]) (List.map .name model.players))
+        ]
+
+
+view : Model -> Html Msg
+view model =
+    div [ class "scoreboard" ]
+        [ h1 [] [ text "Score keeper" ]
+        , players model
+        , playerForm model
+        , span [] [ text (Debug.toString model) ]
         ]
 
 
