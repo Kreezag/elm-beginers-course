@@ -38,10 +38,6 @@ initModel =
     }
 
 
-
--- update
-
-
 type Msg
     = Edit Player
     | Score Player Int
@@ -84,7 +80,6 @@ save model =
 edit : Model -> Int -> Model
 edit model id =
     let
-        -- player = Player ()
         newPlayers =
             List.map
                 (\player ->
@@ -125,19 +120,6 @@ add model =
             player :: model.players
     in
     { model | players = newPlayers, name = "" }
-
-
-
---     input
---     [ type_ "text"
---     , placeholder "add"
---     , onInput Input
---     , value model.name
---     ]
---     []
--- , button [ type_ "submit" ] [ text "Save" ]
--- , button [ type_ "button", onClick Cancel ] [ text "Cancel" ]
--- ]
 
 
 playerForm : Model -> Html Msg
