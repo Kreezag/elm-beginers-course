@@ -44,6 +44,7 @@ type Msg
     | Input String
     | Save
     | Cancel
+    | AddPoints String Int
     | DeletePlay Play
 
 
@@ -63,8 +64,31 @@ update msg model =
         Cancel ->
             { model | name = "", playerId = Nothing }
 
+        Score player points ->
+            score model player points
+
         _ ->
             model
+
+
+score : Model -> Player -> Int -> Model
+score model scorer points =
+    let
+        newPlayers =
+            List.map
+                (\player ->
+                    if player.id == scorer.id then
+                        { player | points = player.points + points }
+
+                    else
+                        player
+                )
+                model.players
+
+        play =
+            Play (List.length model.plays) scorer.id scorer.name points
+    in
+    { model | players = newPlayers, plays = play :: model.plays }
 
 
 save : Model -> Model
@@ -145,7 +169,27 @@ players model =
             , span [] [ text "Points" ]
             ]
         , ul []
-            (List.map (\name -> li [] [ text name ]) (List.map .name model.players))
+            (List.map (\player -> playerView player) model.players)
+        , let
+            total =
+                List.map .points model.plays
+                    |> List.sum
+          in
+          footer []
+            [ div [] [ text "Total:" ]
+            , div [] [ text (Debug.toString total) ]
+            ]
+        ]
+
+
+playerView : Player -> Html Msg
+playerView player =
+    li []
+        [ span []
+            [ text player.name ]
+        , button [ type_ "button", onClick (Score player 2) ] [ text "2pt" ]
+        , button [ type_ "button", onClick (Score player 3) ] [ text "3pt" ]
+        , span [] [ text (Debug.toString player.points) ]
         ]
 
 
