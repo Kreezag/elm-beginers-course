@@ -184,12 +184,16 @@ players model =
 
 playerView : Player -> Html Msg
 playerView player =
-    li []
-        [ span []
-            [ text player.name ]
-        , button [ type_ "button", onClick (Score player 2) ] [ text "2pt" ]
-        , button [ type_ "button", onClick (Score player 3) ] [ text "3pt" ]
-        , span [] [ text (Debug.toString player.points) ]
+    li [ class "Player" ]
+        [ div [ class "Player_main" ]
+            [ button [ class "Player_button" ] [ text "edit" ]
+            , span [ class "Player_name" ] [ text player.name ]
+            , div [ class "Player_info" ]
+                [ button [ class "Player_button", type_ "button", onClick (Score player 2) ] [ text "2pt" ]
+                , button [ class "Player_button", type_ "button", onClick (Score player 3) ] [ text "3pt" ]
+                , span [ class "Player_result" ] [ text (Debug.toString player.points) ]
+                ]
+            ]
         ]
 
 
