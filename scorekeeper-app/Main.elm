@@ -67,6 +67,12 @@ update msg model =
         Score player points ->
             score model player points
 
+        Edit player ->
+            { model
+                | name = player.name
+                , playerId = Just player.id
+            }
+
         _ ->
             model
 
@@ -186,7 +192,7 @@ playerView : Player -> Html Msg
 playerView player =
     li [ class "Player" ]
         [ div [ class "Player_main" ]
-            [ button [ class "Player_button" ] [ text "edit" ]
+            [ button [ class "Player_button", onClick (Edit player) ] [ text "edit" ]
             , span [ class "Player_name" ] [ text player.name ]
             , div [ class "Player_info" ]
                 [ button [ class "Player_button", type_ "button", onClick (Score player 2) ] [ text "2pt" ]

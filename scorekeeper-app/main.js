@@ -4569,6 +4569,9 @@ var author$project$Main$score = F3(
 				plays: A2(elm$core$List$cons, play, model.plays)
 			});
 	});
+var elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
 var elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
@@ -4590,6 +4593,14 @@ var author$project$Main$update = F2(
 				var player = msg.a;
 				var points = msg.b;
 				return A3(author$project$Main$score, model, player, points);
+			case 'Edit':
+				var player = msg.a;
+				return _Utils_update(
+					model,
+					{
+						name: player.name,
+						playerId: elm$core$Maybe$Just(player.id)
+					});
 			default:
 				return model;
 		}
@@ -4757,9 +4768,6 @@ var elm$core$Array$initialize = F2(
 			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
-var elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
 var elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -5106,6 +5114,9 @@ var author$project$Main$playerForm = function (model) {
 					]))
 			]));
 };
+var author$project$Main$Edit = function (a) {
+	return {$: 'Edit', a: a};
+};
 var author$project$Main$Score = F2(
 	function (a, b) {
 		return {$: 'Score', a: a, b: b};
@@ -5136,7 +5147,9 @@ var author$project$Main$playerView = function (player) {
 						elm$html$Html$button,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('Player_button')
+								elm$html$Html$Attributes$class('Player_button'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$Edit(player))
 							]),
 						_List_fromArray(
 							[
