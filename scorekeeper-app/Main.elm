@@ -124,7 +124,7 @@ edit model id =
         newPlays =
             List.map
                 (\play ->
-                    if play.playerId == id then
+                    if play.id == id then
                         { play | name = model.name }
 
                     else

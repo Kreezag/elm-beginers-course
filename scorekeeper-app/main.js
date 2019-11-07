@@ -4516,7 +4516,7 @@ var author$project$Main$edit = F2(
 		var newPlays = A2(
 			elm$core$List$map,
 			function (play) {
-				return _Utils_eq(play.playerId, id) ? _Utils_update(
+				return _Utils_eq(play.id, id) ? _Utils_update(
 					play,
 					{name: model.name}) : play;
 			},
