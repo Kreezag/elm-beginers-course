@@ -5265,19 +5265,28 @@ var author$project$Main$players = function (model) {
 						model.plays));
 				return A2(
 					elm$html$Html$footer,
-					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('Footer')
+						]),
 					_List_fromArray(
 						[
 							A2(
 							elm$html$Html$div,
-							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('Footer_text')
+								]),
 							_List_fromArray(
 								[
 									elm$html$Html$text('Total:')
 								])),
 							A2(
 							elm$html$Html$div,
-							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('Footer_value')
+								]),
 							_List_fromArray(
 								[
 									elm$html$Html$text(

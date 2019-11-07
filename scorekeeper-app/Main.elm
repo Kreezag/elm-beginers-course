@@ -181,9 +181,9 @@ players model =
                 List.map .points model.plays
                     |> List.sum
           in
-          footer []
-            [ div [] [ text "Total:" ]
-            , div [] [ text (Debug.toString total) ]
+          footer [ class "Footer" ]
+            [ div [ class "Footer_text" ] [ text "Total:" ]
+            , div [ class "Footer_value" ] [ text (Debug.toString total) ]
             ]
         ]
 
