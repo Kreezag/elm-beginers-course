@@ -147,7 +147,7 @@ edit model id =
         newPlays =
             List.map
                 (\play ->
-                    if play.id == id then
+                    if play.playerId == id then
                         { play | name = model.name }
 
                     else
@@ -206,6 +206,7 @@ players model =
           in
           footer [ class "Footer" ]
             [ div [ class "Footer_text" ] [ text "Total:" ]
+            , div [ class "Footer_value" ] [ text (Debug.toString total) ]
             ]
         ]
 
@@ -252,6 +253,7 @@ view model =
         , players model
         , playerForm model
         , playList model
+        , span [] [ text (Debug.toString model) ]
         ]
 
 

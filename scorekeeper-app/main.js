@@ -4516,7 +4516,7 @@ var author$project$Main$edit = F2(
 		var newPlays = A2(
 			elm$core$List$map,
 			function (play) {
-				return _Utils_eq(play.id, id) ? _Utils_update(
+				return _Utils_eq(play.playerId, id) ? _Utils_update(
 					play,
 					{name: model.name}) : play;
 			},
@@ -5311,11 +5311,23 @@ var author$project$Main$playerView = function (player) {
 								_List_fromArray(
 									[
 										elm$html$Html$text('3pt')
+									])),
+								A2(
+								elm$html$Html$span,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('Player_result')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(
+										elm$core$String$fromInt(player.points))
 									]))
 							]))
 					]))
 			]));
 };
+var elm$core$Debug$toString = _Debug_toString;
 var elm$core$List$sum = function (numbers) {
 	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
 };
@@ -5380,6 +5392,17 @@ var author$project$Main$players = function (model) {
 							_List_fromArray(
 								[
 									elm$html$Html$text('Total:')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('Footer_value')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									elm$core$Debug$toString(total))
 								]))
 						]));
 			}()
@@ -5404,7 +5427,15 @@ var author$project$Main$view = function (model) {
 					])),
 				author$project$Main$players(model),
 				author$project$Main$playerForm(model),
-				author$project$Main$playList(model)
+				author$project$Main$playList(model),
+				A2(
+				elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						elm$core$Debug$toString(model))
+					]))
 			]));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
