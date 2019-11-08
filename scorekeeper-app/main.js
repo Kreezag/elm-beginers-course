@@ -4550,8 +4550,8 @@ var author$project$Main$score = F3(
 	function (model, scorer, points) {
 		var play = A4(
 			author$project$Main$Play,
-			elm$core$List$length(model.plays),
 			scorer.id,
+			elm$core$List$length(model.plays),
 			scorer.name,
 			points);
 		var newPlayers = A2(
@@ -4568,6 +4568,39 @@ var author$project$Main$score = F3(
 				players: newPlayers,
 				plays: A2(elm$core$List$cons, play, model.plays)
 			});
+	});
+var elm$core$Basics$neq = _Utils_notEqual;
+var elm$core$Basics$sub = _Basics_sub;
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var author$project$Main$scoreRemove = F2(
+	function (model, play_) {
+		var plays_ = A2(
+			elm$core$List$filter,
+			function (play) {
+				return !_Utils_eq(play.id, play_.id);
+			},
+			model.plays);
+		var players_ = A2(
+			elm$core$List$map,
+			function (player) {
+				return _Utils_eq(player.id, play_.playerId) ? _Utils_update(
+					player,
+					{points: player.points - play_.points}) : player;
+			},
+			model.players);
+		return _Utils_update(
+			model,
+			{players: players_, plays: plays_});
 	});
 var elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
@@ -4601,10 +4634,16 @@ var author$project$Main$update = F2(
 						name: player.name,
 						playerId: elm$core$Maybe$Just(player.id)
 					});
+			case 'DeletePlay':
+				var play = msg.a;
+				return A2(author$project$Main$scoreRemove, model, play);
 			default:
 				return model;
 		}
 	});
+var author$project$Main$DeletePlay = function (a) {
+	return {$: 'DeletePlay', a: a};
+};
 var elm$core$String$fromInt = _String_fromNumber;
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -4697,7 +4736,6 @@ var elm$core$Basics$max = F2(
 		return (_Utils_cmp(x, y) > 0) ? x : y;
 	});
 var elm$core$Basics$mul = _Basics_mul;
-var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Elm$JsArray$length = _JsArray_length;
 var elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
@@ -4994,6 +5032,23 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
 var author$project$Main$playItem = function (play) {
 	return A2(
 		elm$html$Html$li,
@@ -5012,7 +5067,9 @@ var author$project$Main$playItem = function (play) {
 						elm$html$Html$button,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('PlayItem_remove')
+								elm$html$Html$Attributes$class('PlayItem_remove'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$DeletePlay(play))
 							]),
 						_List_fromArray(
 							[
@@ -5055,7 +5112,7 @@ var author$project$Main$playList = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						elm$html$Html$text('Plays')
+						elm$html$Html$text('Plays:')
 					])),
 				A2(
 				elm$html$Html$ul,
@@ -5078,23 +5135,6 @@ var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
 var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
 var elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -5199,7 +5239,6 @@ var author$project$Main$Score = F2(
 	function (a, b) {
 		return {$: 'Score', a: a, b: b};
 	});
-var elm$core$Debug$toString = _Debug_toString;
 var author$project$Main$playerView = function (player) {
 	return A2(
 		elm$html$Html$li,
@@ -5272,17 +5311,6 @@ var author$project$Main$playerView = function (player) {
 								_List_fromArray(
 									[
 										elm$html$Html$text('3pt')
-									])),
-								A2(
-								elm$html$Html$span,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('Player_result')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(
-										elm$core$Debug$toString(player.points))
 									]))
 							]))
 					]))
@@ -5352,17 +5380,6 @@ var author$project$Main$players = function (model) {
 							_List_fromArray(
 								[
 									elm$html$Html$text('Total:')
-								])),
-							A2(
-							elm$html$Html$div,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$class('Footer_value')
-								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text(
-									elm$core$Debug$toString(total))
 								]))
 						]));
 			}()
@@ -5387,15 +5404,7 @@ var author$project$Main$view = function (model) {
 					])),
 				author$project$Main$players(model),
 				author$project$Main$playerForm(model),
-				author$project$Main$playList(model),
-				A2(
-				elm$html$Html$span,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text(
-						elm$core$Debug$toString(model))
-					]))
+				author$project$Main$playList(model)
 			]));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;

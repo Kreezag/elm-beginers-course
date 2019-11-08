@@ -73,6 +73,9 @@ update msg model =
                 , playerId = Just player.id
             }
 
+        DeletePlay play ->
+            scoreRemove model play
+
         _ ->
             model
 
@@ -92,9 +95,29 @@ score model scorer points =
                 model.players
 
         play =
-            Play (List.length model.plays) scorer.id scorer.name points
+            Play scorer.id (List.length model.plays) scorer.name points
     in
     { model | players = newPlayers, plays = play :: model.plays }
+
+
+scoreRemove : Model -> Play -> Model
+scoreRemove model play_ =
+    let
+        players_ =
+            List.map
+                (\player ->
+                    if player.id == play_.playerId then
+                        { player | points = player.points - play_.points }
+
+                    else
+                        player
+                )
+                model.players
+
+        plays_ =
+            List.filter (\play -> play.id /= play_.id) model.plays
+    in
+    { model | players = players_, plays = plays_ }
 
 
 save : Model -> Model
@@ -183,7 +206,6 @@ players model =
           in
           footer [ class "Footer" ]
             [ div [ class "Footer_text" ] [ text "Total:" ]
-            , div [ class "Footer_value" ] [ text (Debug.toString total) ]
             ]
         ]
 
@@ -197,7 +219,6 @@ playerView player =
             , div [ class "Player_info" ]
                 [ button [ class "Player_button", type_ "button", onClick (Score player 2) ] [ text "2pt" ]
                 , button [ class "Player_button", type_ "button", onClick (Score player 3) ] [ text "3pt" ]
-                , span [ class "Player_result" ] [ text (Debug.toString player.points) ]
                 ]
             ]
         ]
@@ -207,7 +228,7 @@ playItem : Play -> Html Msg
 playItem play =
     li [ class "PlayItem" ]
         [ div []
-            [ button [ class "PlayItem_remove" ] [ text "Remove" ]
+            [ button [ class "PlayItem_remove", onClick (DeletePlay play) ] [ text "Remove" ]
             , span [] [ text play.name ]
             ]
         , span [ class "PlayItem_left" ] [ text (String.fromInt play.points) ]
@@ -230,7 +251,6 @@ view model =
         , players model
         , playerForm model
         , playList model
-        , span [] [ text (Debug.toString model) ]
         ]
 
 
