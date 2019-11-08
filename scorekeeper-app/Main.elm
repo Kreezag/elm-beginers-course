@@ -203,12 +203,33 @@ playerView player =
         ]
 
 
+playItem : Play -> Html Msg
+playItem play =
+    li [ class "PlayItem" ]
+        [ div []
+            [ button [ class "PlayItem_remove" ] [ text "Remove" ]
+            , span [] [ text play.name ]
+            ]
+        , span [ class "PlayItem_left" ] [ text (String.fromInt play.points) ]
+        ]
+
+
+playList : Model -> Html Msg
+playList model =
+    div [ class "PlayList" ]
+        [ h4 [] [ text "Plays:" ]
+        , ul []
+            (List.map (\plays -> playItem plays) model.plays)
+        ]
+
+
 view : Model -> Html Msg
 view model =
     div [ class "scoreboard" ]
         [ h1 [] [ text "Score keeper" ]
         , players model
         , playerForm model
+        , playList model
         , span [] [ text (Debug.toString model) ]
         ]
 
