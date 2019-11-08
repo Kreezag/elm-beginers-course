@@ -206,7 +206,7 @@ players model =
           in
           footer [ class "Footer" ]
             [ div [ class "Footer_text" ] [ text "Total:" ]
-            , div [ class "Footer_value" ] [ text (Debug.toString total) ]
+            , div [ class "Footer_value" ] [ text (String.fromInt total) ]
             ]
         ]
 
@@ -253,7 +253,6 @@ view model =
         , players model
         , playerForm model
         , playList model
-        , span [] [ text (Debug.toString model) ]
         ]
 
 
