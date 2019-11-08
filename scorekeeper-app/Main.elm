@@ -219,6 +219,7 @@ playerView player =
             , div [ class "Player_info" ]
                 [ button [ class "Player_button", type_ "button", onClick (Score player 2) ] [ text "2pt" ]
                 , button [ class "Player_button", type_ "button", onClick (Score player 3) ] [ text "3pt" ]
+                , span [ class "Player_result" ] [ text (String.fromInt player.points) ]
                 ]
             ]
         ]
